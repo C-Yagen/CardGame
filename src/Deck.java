@@ -14,5 +14,29 @@ public class Deck {
                 this.cardsLeft++;
             }
         }
+        this.shuffleCards();
+    }
+
+    public boolean isEmpty(){
+        if(cardsLeft == 0){
+            return true;
+        }
+        return false;
+    }
+
+    public int getCardsLeft(){
+        return cardsLeft;
+    }
+
+    public Card deal(){
+        return cards.get(--cardsLeft);
+    }
+
+    public void shuffleCards(){
+        Card copy;
+        for (int i = 0; i < cards.size(); i++){
+            copy = cards.set((int)(Math.random()*53), cards.get(i));
+            cards.set(i, copy);
+        }
     }
 }
