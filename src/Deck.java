@@ -29,13 +29,18 @@ public class Deck {
     }
 
     public Card deal(){
+        if(this.isEmpty()){
+            return null;
+        }
         return cards.get(--cardsLeft);
     }
 
     public void shuffleCards(){
         Card copy;
-        for (int i = 0; i < cards.size(); i++){
-            copy = cards.set((int)(Math.random()*53), cards.get(i));
+        for (int i = 0; i < cardsLeft; i++){
+            // sets a random card to the card at index i
+            copy = cards.set((int)(Math.random()*(cardsLeft)), cards.get(i));
+            // sets the card at index i to the random card
             cards.set(i, copy);
         }
     }
