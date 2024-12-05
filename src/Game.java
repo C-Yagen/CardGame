@@ -4,12 +4,12 @@ import java.util.Scanner;
 public class Game {
     private ArrayList<Player> players;
     private Deck deck;
-    private ArrayList<Card> shownCards;
+    private Player dealer;
     private Scanner s = new Scanner(System.in);
 
     public Game(){
+        dealer = new Player("dealer");
         players = new ArrayList<Player>();
-        shownCards = new ArrayList<Card>();
         // asks how many players and their names
         System.out.println("How many players:");
         int numPlayers = s.nextInt();
@@ -21,15 +21,15 @@ public class Game {
             players.add(new Player(player));
         }
         // creates deck
-        String[] ranks = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"};
+        String[] ranks = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"};
         String[] suits = {"Hearts", "Clubs", "Spades", "Diamonds"};
-        int[] values = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 11};
+        int[] values = {2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 1};
         this.deck = new Deck(ranks, suits, values);
 
     }
 
     public void printInstructions(){
-        System.out.println("");
+        System.out.println("This is Blackjack, to play this game you want to get as close to 21 as possible without going over");
     }
 
     public void playGame(){
@@ -39,31 +39,70 @@ public class Game {
                 players.get(i).addCard(deck.deal());
             }
         }
-        for (int i = 0; i < 3; i++) {
-            shownCards.add(deck.deal());
+        dealer.addCard(deck.deal());
+        dealer.addCard(deck.deal());
+        System.out.println("The dealer has a " + dealer.getHand().get(0).toString() + " showing");
+        // do players' turns
+        for (int i = 0; i < players.size(); i++){
+            this.hitOrStay(players.get(i));
         }
-        System.out.println(shownCards);
+        // dealer's turn
+        while(sumCardValue(dealer) < 16){
+            dealer.addCard(deck.deal());
+        }
+        int dealerTotal = sumCardValue(dealer);
+        System.out.println("The dealer has a total of " + dealerTotal);
 
-
+        // Runs the case where the dealer busted
+        if (dealerTotal > 21){
+            System.out.println("The dealer Busted!");
+            for (int i = 0; i < players.size(); i++) {
+                if(players.get(i).isInGame()){
+                    System.out.println(players.get(i).getName() + " won!");
+                }
+            }
+        }
+        for (int i = 0; i < players.size(); i++) {
+            // checks if the player is still in the game and if their score is better than the dealer
+            if (Game.sumCardValue(players.get(i)) > dealerTotal && players.get(i).isInGame()){
+                System.out.println(players.get(i).getName() + " won!");
+            }
+        }
     }
 
-    public void swapFoldPhase(Player player){
-        int n = -2;
-        // prompts the user if they want to swap a card from their hand with one of the shown cards or fold
-        while (n < -1 || n > shownCards.size()){
-            System.out.println("type -1 to fold, 0 to do nothing, or type the number of the card you want to swap with");
-            / not done
-            n = s.nextInt();
-        }
-        if (n == -1){
-            player.setInGame(false);
-            return;
-        }
-        if (n == 0) {
-            return;
+    // does a player's turn
+    public void hitOrStay(Player player){
+        boolean hit = true;
+        while(Game.sumCardValue(player) < 21 && hit){
+            System.out.println("Current cards value: " + Game.sumCardValue(player));
+            System.out.println("Enter false to stay and true to hit");
+            hit = s.nextBoolean();
+            s.nextLine();
+            if (hit) {
+                player.addCard(deck.deal());
+            }
+
+            if(Game.sumCardValue(player) > 21){
+                System.out.println("You busted!");
+                player.setInGame(false);
+                return;
+            }
+            if(Game.sumCardValue(player) == 21){
+                System.out.println("Blackjack!");
+                return;
+            }
         }
     }
 
+    // returns the value of all the cards in a player's hand
+    public static int sumCardValue(Player player){
+        ArrayList<Card> hand = player.getHand();
+        int sum = 0;
+        for (int i = 0; i < hand.size(); i++) {
+            sum += hand.get(i).getValue();
+        }
+        return sum;
+    }
 
 
     public static void main(String[] args) {

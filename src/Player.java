@@ -10,6 +10,7 @@ public class Player {
         this.name = name;
         this.points = 0;
         this.hand = new ArrayList<Card>();
+        this.inGame = true;
     }
 
     public Player(String name, ArrayList<Card> hand){
@@ -23,6 +24,10 @@ public class Player {
 
     public void setInGame(boolean inGame) {
         this.inGame = inGame;
+    }
+
+    public boolean isInGame() {
+        return inGame;
     }
 
     public String getName() {
