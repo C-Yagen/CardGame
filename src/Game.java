@@ -1,3 +1,4 @@
+//Poker by Connor Yagen Finalized on 12/5/24
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -50,6 +51,7 @@ public class Game {
         while(sumCardValue(dealer) < 16){
             dealer.addCard(deck.deal());
         }
+        // # of point dealer has
         int dealerTotal = sumCardValue(dealer);
         System.out.println("The dealer has a total of " + dealerTotal);
 
