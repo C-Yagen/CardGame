@@ -7,8 +7,10 @@ public class Game {
     private Deck deck;
     private Player dealer;
     private Scanner s = new Scanner(System.in);
+    private GameViewer window;
 
     public Game(){
+        window = new GameViewer(this);
         dealer = new Player("dealer");
         players = new ArrayList<Player>();
         // asks how many players and their names
@@ -25,7 +27,7 @@ public class Game {
         String[] ranks = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"};
         String[] suits = {"Hearts", "Clubs", "Spades", "Diamonds"};
         int[] values = {2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 1};
-        this.deck = new Deck(ranks, suits, values);
+        this.deck = new Deck(ranks, suits, values, window);
 
     }
 
@@ -45,6 +47,7 @@ public class Game {
         System.out.println("The dealer has a " + dealer.getHand().get(0).toString() + " showing");
         // do players' turns
         for (int i = 0; i < players.size(); i++){
+            window.setCurrentPlayer(players.get(i));
             this.hitOrStay(players.get(i));
         }
         // dealer's turn
@@ -75,6 +78,7 @@ public class Game {
     // does a player's turn
     public void hitOrStay(Player player){
         boolean hit = true;
+        window.repaint();
         while(Game.sumCardValue(player) < 21 && hit){
             System.out.println("Current cards value: " + Game.sumCardValue(player));
             System.out.println("Enter false to stay and true to hit");
@@ -83,6 +87,7 @@ public class Game {
             if (hit) {
                 player.addCard(deck.deal());
             }
+            window.repaint();
 
             if(Game.sumCardValue(player) > 21){
                 System.out.println("You busted!");
@@ -100,12 +105,22 @@ public class Game {
     public static int sumCardValue(Player player){
         ArrayList<Card> hand = player.getHand();
         int sum = 0;
+        Boolean ace = false;
         for (int i = 0; i < hand.size(); i++) {
             sum += hand.get(i).getValue();
+            if (hand.get(i).getRank().equals("A")){
+                ace = true;
+            }
+        }
+        if (sum < 12 && ace){
+            return sum + 10;
         }
         return sum;
     }
 
+    public Player getDealer() {
+        return dealer;
+    }
 
     public static void main(String[] args) {
         Game game1 = new Game();

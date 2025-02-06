@@ -5,13 +5,13 @@ public class Deck {
     private ArrayList<Card> cards;
     private int cardsLeft;
 
-    public Deck(String[] ranks, String[] suits, int[] values) {
+    public Deck(String[] ranks, String[] suits, int[] values, GameViewer window) {
         this.cardsLeft = 0;
         this.cards = new ArrayList<Card>();
         // creates every combination of cards with (ranks/values) and suits
         for (int i = 0; i < ranks.length; i++){
             for (int j = 0; j < suits.length; j++){
-                this.cards.add(new Card(ranks[i], suits[j], values[i]));
+                this.cards.add(new Card(ranks[i], suits[j], values[i], window));
                 this.cardsLeft++;
             }
         }

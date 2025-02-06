@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.awt.*;
 
 public class Player {
     private ArrayList<Card> hand;
@@ -52,5 +53,25 @@ public class Player {
 
     public String toString(){
         return name + " has " + points + " points. " + name + "'s cards: " + hand;
+    }
+
+    public void drawPlayer(Graphics g){
+        int offSet = GameViewer.WINDOW_WIDTH_CENTER - (int)(0.5*(hand.size()*Card.CARDWIDTH + (hand.size()-1)*Card.CARDWIDTH*0.5));
+        for (int i = 0; i < hand.size(); i++){
+            hand.get(i).draw(g, offSet + i * (int)(Card.CARDWIDTH * 1.5), GameViewer.WINDOW_HEIGHT - 200);
+        }
+    }
+
+    public void drawDealer(Graphics g){
+        int offSet = GameViewer.WINDOW_WIDTH_CENTER - (int)(0.5*(hand.size()*Card.CARDWIDTH + (hand.size()-1)*Card.CARDWIDTH*0.5));
+        for (int i = 0; i < hand.size(); i++){
+            if (i == 0){
+                hand.get(i).drawHidden(g, offSet + i * (int)(Card.CARDWIDTH * 1.5),100);
+            }
+            else {
+                hand.get(i).draw(g, offSet + i * (int)(Card.CARDWIDTH * 1.5),100);
+            }
+
+        }
     }
 }

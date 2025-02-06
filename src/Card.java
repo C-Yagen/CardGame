@@ -1,10 +1,15 @@
+import java.awt.*;
 public class Card {
 
     private String rank;
     private String suit;
     private int value;
+    private GameViewer window;
+    public static final int CARDWIDTH = 75;
+    public static final int CARDHEIGHT = 150;
 
-    public Card(String rank, String suit, int value) {
+    public Card(String rank, String suit, int value, GameViewer window) {
+        this.window = window;
         this.rank = rank;
         this.suit = suit;
         this.value = value;
@@ -36,5 +41,31 @@ public class Card {
 
     public String toString() {
         return rank + " of " + suit;
+    }
+
+    public void draw(Graphics g, int x, int y){
+        if (suit.equals("Diamonds") || suit.equals("Hearts")){
+            g.setColor(Color.RED);
+        } else {
+            g.setColor(Color.BLACK);
+        }
+        g.drawRect(x, y, CARDWIDTH, CARDHEIGHT);
+        g.drawString(rank, x + 5, y + CARDWIDTH/2);
+        if (suit.equals("Clubs")){
+            g.drawImage(GameViewer.CLUBIMAGE, x, y + CARDWIDTH/2, CARDWIDTH, CARDWIDTH, window);
+        } else if (suit.equals("Diamonds")) {
+            g.drawImage(GameViewer.DIAMONDIMAGE, x, y + CARDWIDTH/2, CARDWIDTH, CARDWIDTH, window);
+        }else if (suit.equals("Hearts")) {
+            g.drawImage(GameViewer.HEARTIMAGE, x, y + CARDWIDTH/2, CARDWIDTH, CARDWIDTH, window);
+        }else {
+            g.drawImage(GameViewer.SPADEIMAGE, x, y + CARDWIDTH/2, CARDWIDTH, CARDWIDTH, window);
+        }
+        g.setColor(Color.BLACK);
+    }
+
+    public void drawHidden(Graphics g, int x, int y){
+        g.drawRect(x, y, CARDWIDTH, CARDHEIGHT);
+        g.drawImage(GameViewer.CLUBIMAGE, x, y, CARDWIDTH, CARDWIDTH, window);
+        g.drawImage(GameViewer.DIAMONDIMAGE, x, y + CARDWIDTH, CARDWIDTH, CARDWIDTH, window);
     }
 }
