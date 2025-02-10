@@ -4,15 +4,20 @@ import java.util.Scanner;
 
 public class Game {
     private ArrayList<Player> players;
+    private ArrayList<Player> winners;
     private Deck deck;
     private Player dealer;
     private Scanner s = new Scanner(System.in);
     private GameViewer window;
+    private int gameState;
+    private Player currentPlayer;
 
     public Game(){
+        gameState = 0;
         window = new GameViewer(this);
-        dealer = new Player("dealer");
+        dealer = new Player("Dealer");
         players = new ArrayList<Player>();
+        winners = new ArrayList<Player>();
         // asks how many players and their names
         System.out.println("How many players:");
         int numPlayers = s.nextInt();
@@ -23,6 +28,8 @@ public class Game {
             String player = s.nextLine();
             players.add(new Player(player));
         }
+        // updates window
+        gameState = 1;
         // creates deck
         String[] ranks = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"};
         String[] suits = {"Hearts", "Clubs", "Spades", "Diamonds"};
@@ -31,11 +38,24 @@ public class Game {
 
     }
 
+    public int getGameState() {
+        return gameState;
+    }
+
+    public Player getCurrentPlayer() {
+        return currentPlayer;
+    }
+
+    public ArrayList<Player> getWinners() {
+        return winners;
+    }
+
     public void printInstructions(){
-        System.out.println("This is Blackjack, to play this game you want to get as close to 21 as possible without going over");
+        System.out.println("This is Blackjack, to play this game you want to get as close to 21 as possible without going over.\nHowever, you must also get a higher value hand than the dealer");
     }
 
     public void playGame(){
+        this.printInstructions();
         // deals 2 cards to each player
         for (int i = 0; i < players.size(); i++) {
             for (int j = 0; j < 2; j++) {
@@ -44,10 +64,10 @@ public class Game {
         }
         dealer.addCard(deck.deal());
         dealer.addCard(deck.deal());
-        System.out.println("The dealer has a " + dealer.getHand().get(0).toString() + " showing");
+        System.out.println("The dealer has a " + dealer.getHand().get(1).toString() + " showing");
         // do players' turns
         for (int i = 0; i < players.size(); i++){
-            window.setCurrentPlayer(players.get(i));
+            currentPlayer = players.get(i);
             this.hitOrStay(players.get(i));
         }
         // dealer's turn
@@ -63,16 +83,27 @@ public class Game {
             System.out.println("The dealer Busted!");
             for (int i = 0; i < players.size(); i++) {
                 if(players.get(i).isInGame()){
+                    winners.add(players.get(i));
                     System.out.println(players.get(i).getName() + " won!");
                 }
             }
+            gameState = 2;
+            window.repaint();
+            return;
         }
         for (int i = 0; i < players.size(); i++) {
             // checks if the player is still in the game and if their score is better than the dealer
             if (Game.sumCardValue(players.get(i)) > dealerTotal && players.get(i).isInGame()){
+                winners.add(players.get(i));
                 System.out.println(players.get(i).getName() + " won!");
             }
         }
+        if (winners.isEmpty()){
+            winners.add(dealer);
+            System.out.println("The Dealer Won!");
+        }
+        gameState = 2;
+        window.repaint();
     }
 
     // does a player's turn
