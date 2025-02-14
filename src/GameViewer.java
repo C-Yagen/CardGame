@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.awt.event.*;
 
 public class GameViewer extends JFrame {
     // TODO: Complete this class
@@ -20,6 +21,7 @@ public class GameViewer extends JFrame {
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setTitle("Card Game");
         this.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+        this.setLayout(null);
         this.setVisible(true);
         repaint();
     }

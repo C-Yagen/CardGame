@@ -51,11 +51,29 @@ public class Player {
         hand.add(card);
     }
 
+    // returns the value of all the cards in a player's hand
+    public int sumCardValue(){
+        int sum = 0;
+        // aces are worth 1 but if they could be worth 11 without busting, they are
+        Boolean ace = false;
+        for (int i = 0; i < hand.size(); i++) {
+            sum += hand.get(i).getValue();
+            if (hand.get(i).getRank().equals("A")){
+                ace = true;
+            }
+        }
+        if (sum < 12 && ace){
+            return sum + 10;
+        }
+        return sum;
+    }
+
     public String toString(){
         return name + " has " + points + " points. " + name + "'s cards: " + hand;
     }
 
     public void drawPlayer(Graphics g){
+        // offSet is where the card on the far left is, it's based on # of cards and ensures the hand is centered
         int offSet = GameViewer.WINDOW_WIDTH_CENTER - (int)(0.5*(hand.size()*Card.CARDWIDTH + (hand.size()-1)*Card.CARDWIDTH*0.5));
         for (int i = 0; i < hand.size(); i++){
             hand.get(i).draw(g, offSet + i * (int)(Card.CARDWIDTH * 1.5), GameViewer.WINDOW_HEIGHT - 200);
@@ -63,6 +81,7 @@ public class Player {
     }
 
     public void drawDealer(Graphics g){
+        // the dealer is drawn just like other players but is drawn at the top of the screen
         int offSet = GameViewer.WINDOW_WIDTH_CENTER - (int)(0.5*(hand.size()*Card.CARDWIDTH + (hand.size()-1)*Card.CARDWIDTH*0.5));
         for (int i = 0; i < hand.size(); i++){
             if (i == 0){

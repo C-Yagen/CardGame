@@ -44,12 +44,14 @@ public class Card {
     }
 
     public void draw(Graphics g, int x, int y){
+        // sets color scheme for card
         if (suit.equals("Diamonds") || suit.equals("Hearts")){
             g.setColor(Color.RED);
         } else {
             g.setColor(Color.BLACK);
         }
         g.drawRect(x, y, CARDWIDTH, CARDHEIGHT);
+        // Draws the rank and image onto the card
         g.drawString(rank, x + 5, y + CARDWIDTH/2);
         if (suit.equals("Clubs")){
             g.drawImage(GameViewer.CLUBIMAGE, x, y + CARDWIDTH/2, CARDWIDTH, CARDWIDTH, window);
@@ -64,6 +66,7 @@ public class Card {
     }
 
     public void drawHidden(Graphics g, int x, int y){
+        // for the dealer's hidden card
         g.drawRect(x, y, CARDWIDTH, CARDHEIGHT);
         g.drawImage(GameViewer.CLUBIMAGE, x, y, CARDWIDTH, CARDWIDTH, window);
         g.drawImage(GameViewer.DIAMONDIMAGE, x, y + CARDWIDTH, CARDWIDTH, CARDWIDTH, window);

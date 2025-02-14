@@ -1,6 +1,9 @@
 //Poker by Connor Yagen Finalized on 12/5/24
+import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.awt.event.*;
 
 public class Game {
     private ArrayList<Player> players;
@@ -9,12 +12,14 @@ public class Game {
     private Player dealer;
     private Scanner s = new Scanner(System.in);
     private GameViewer window;
+    // gameState 0 == Instructions 1 == Game 2 == End Screen
     private int gameState;
     private Player currentPlayer;
 
     public Game(){
         gameState = 0;
         window = new GameViewer(this);
+
         dealer = new Player("Dealer");
         players = new ArrayList<Player>();
         winners = new ArrayList<Player>();
@@ -40,6 +45,10 @@ public class Game {
 
     public int getGameState() {
         return gameState;
+    }
+
+    public ArrayList<JButton> getButtons() {
+        return buttons;
     }
 
     public Player getCurrentPlayer() {
@@ -71,11 +80,11 @@ public class Game {
             this.hitOrStay(players.get(i));
         }
         // dealer's turn
-        while(sumCardValue(dealer) < 16){
+        while(dealer.sumCardValue() < 16){
             dealer.addCard(deck.deal());
         }
         // # of point dealer has
-        int dealerTotal = sumCardValue(dealer);
+        int dealerTotal = dealer.sumCardValue();
         System.out.println("The dealer has a total of " + dealerTotal);
 
         // Runs the case where the dealer busted
@@ -93,12 +102,13 @@ public class Game {
         }
         for (int i = 0; i < players.size(); i++) {
             // checks if the player is still in the game and if their score is better than the dealer
-            if (Game.sumCardValue(players.get(i)) > dealerTotal && players.get(i).isInGame()){
+            if (players.get(i).sumCardValue() > dealerTotal && players.get(i).isInGame()){
                 winners.add(players.get(i));
                 System.out.println(players.get(i).getName() + " won!");
             }
         }
         if (winners.isEmpty()){
+            // if there's no winners, the dealer won
             winners.add(dealer);
             System.out.println("The Dealer Won!");
         }
@@ -110,43 +120,28 @@ public class Game {
     public void hitOrStay(Player player){
         boolean hit = true;
         window.repaint();
-        while(Game.sumCardValue(player) < 21 && hit){
-            System.out.println("Current cards value: " + Game.sumCardValue(player));
+        int cardsValue = player.sumCardValue();
+        while(cardsValue < 21 && hit){
+            System.out.println("Current cards value: " + player.sumCardValue());
             System.out.println("Enter false to stay and true to hit");
             hit = s.nextBoolean();
             s.nextLine();
             if (hit) {
                 player.addCard(deck.deal());
+                cardsValue = player.sumCardValue();
             }
             window.repaint();
 
-            if(Game.sumCardValue(player) > 21){
+            if(cardsValue > 21){
                 System.out.println("You busted!");
                 player.setInGame(false);
                 return;
             }
-            if(Game.sumCardValue(player) == 21){
+            if(cardsValue == 21){
                 System.out.println("Blackjack!");
                 return;
             }
         }
-    }
-
-    // returns the value of all the cards in a player's hand
-    public static int sumCardValue(Player player){
-        ArrayList<Card> hand = player.getHand();
-        int sum = 0;
-        Boolean ace = false;
-        for (int i = 0; i < hand.size(); i++) {
-            sum += hand.get(i).getValue();
-            if (hand.get(i).getRank().equals("A")){
-                ace = true;
-            }
-        }
-        if (sum < 12 && ace){
-            return sum + 10;
-        }
-        return sum;
     }
 
     public Player getDealer() {
