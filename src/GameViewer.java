@@ -1,18 +1,12 @@
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
-import java.awt.event.*;
 
 public class GameViewer extends JFrame {
     // TODO: Complete this class
     public static final int WINDOW_WIDTH = 1000;
     public static final int WINDOW_WIDTH_CENTER = 500;
     public static final int WINDOW_HEIGHT = 800;
-
-    public static final Image CLUBIMAGE = new ImageIcon("Resources/club.png").getImage();
-    public static final Image DIAMONDIMAGE = new ImageIcon("Resources/diamond.png").getImage();
-    public static final Image HEARTIMAGE = new ImageIcon("Resources/heart.png").getImage();
-    public static final Image SPADEIMAGE = new ImageIcon("Resources/spade.png").getImage();
 
     private Game game;
 
@@ -44,12 +38,13 @@ public class GameViewer extends JFrame {
             g.setFont(new Font("SansSerif", Font.PLAIN, 18));
             g.drawString("To play this game you need to get as close to 21 as possible without going over", 20, 200);
             g.drawString("However, you must also get a higher value hand than the dealer", 20, 225);
-            g.drawImage(CLUBIMAGE, 50, 500, 200, 200, this);
-            g.drawImage(DIAMONDIMAGE, 275, 500, 200, 200, this);
-            g.drawImage(HEARTIMAGE, 525, 500, 200, 200, this);
-            g.drawImage(SPADEIMAGE, 750, 500, 200, 200, this);
+            g.drawImage(Game.CLUBIMAGE, 50, 500, 200, 200, this);
+            g.drawImage(Game.DIAMONDIMAGE, 275, 500, 200, 200, this);
+            g.drawImage(Game.HEARTIMAGE, 525, 500, 200, 200, this);
+            g.drawImage(Game.SPADEIMAGE, 750, 500, 200, 200, this);
         // Game window
         } else if (gameState == 1) {
+            g.drawImage(Game.BACKGROUND, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, this);
             game.getDealer().drawDealer(g);
             game.getCurrentPlayer().drawPlayer(g);
             g.drawString(game.getCurrentPlayer().getName() + "'s cards", 400, WINDOW_HEIGHT - 250);

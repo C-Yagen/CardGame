@@ -3,7 +3,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.awt.event.*;
 
 public class Game {
     private ArrayList<Player> players;
@@ -15,6 +14,12 @@ public class Game {
     // gameState 0 == Instructions 1 == Game 2 == End Screen
     private int gameState;
     private Player currentPlayer;
+
+    public static final Image CLUBIMAGE = new ImageIcon("Resources/club.png").getImage();
+    public static final Image DIAMONDIMAGE = new ImageIcon("Resources/diamond.png").getImage();
+    public static final Image HEARTIMAGE = new ImageIcon("Resources/heart.png").getImage();
+    public static final Image SPADEIMAGE = new ImageIcon("Resources/spade.png").getImage();
+    public static final Image BACKGROUND = new ImageIcon("Resources/background.jpg").getImage();
 
     public Game(){
         gameState = 0;
@@ -45,10 +50,6 @@ public class Game {
 
     public int getGameState() {
         return gameState;
-    }
-
-    public ArrayList<JButton> getButtons() {
-        return buttons;
     }
 
     public Player getCurrentPlayer() {
